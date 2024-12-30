@@ -1,1 +1,1 @@
-confirm(document.domain)
+confirm(document.cookie)
