@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-submit Form</title>
+</head>
+<body>
+    <script>
+        (function() {
+            // Function to get the URL parameters
+            function getUrlParams() {
+                const params = {};
+                const queryString = window.location.search.substring(1);
+                const regex = /([^&=]+)=([^&]*)/g;
+                let match;
+                while (match = regex.exec(queryString)) {
+                    params[decodeURIComponent(match[1])] = decodeURIComponent(match[2]);
+                }
+                return params;
+            }
+
+            // Get the URL parameters
+            const params = getUrlParams();
+
+            // Check if the _url_poc parameter is present
+            if (params._url_poc) {
+                const urlPoc = params._url_poc;
+
+                // Check if the _url_poc starts with "http" or "https"
+                if (urlPoc.startsWith('http://') || urlPoc.startsWith('https://')) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = urlPoc;
+                    
+                    if(params._enc_type){
+                        form.enctype = params._enc_type;
+                    }
+
+                    // Add the rest of the parameters as hidden input fields
+                    for (const key in params) {
+                        if (key !== '_url_poc' && key !== '_enc_type') {
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = key;
+                            input.value = params[key];
+                            form.appendChild(input);
+                        }
+                    }
+
+                    // Append the form to the body
+                    document.body.appendChild(form);
+
+                    // Automatically submit the form
+                    form.submit();
+                } else {
+                    console.error('The "_url_poc" parameter must start with "http" or "https".');
+                }
+            } else {
+                console.error('The "_url_poc" parameter is missing.');
+            }
+        })();
+    </script>
+</body>
+</html>
