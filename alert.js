@@ -1,1 +1,2 @@
-confirm(document.cookie)
+
+window.location.href = 'https://www.facebook.com';
